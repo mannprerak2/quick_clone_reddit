@@ -136,9 +136,9 @@ class HomeTab extends StatelessWidget {
     return ListView.builder(
       itemCount: 100,
       itemBuilder: (context, i) {
-        return InkWell(
-          onTap: () => Navigator.of(context).pushNamed('/post'),
-          child: Card(
+        return Card(
+          child: InkWell(
+            onTap: () => Navigator.of(context).pushNamed('/post'),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
