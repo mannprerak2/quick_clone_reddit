@@ -1,10 +1,12 @@
-import 'dart:html';
+// import 'dart:html';
 
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 
 void main() => runApp(MyApp());
 
 final _key = GlobalKey<ScaffoldState>();
+final dio = Dio(BaseOptions(baseUrl: 'https://dummyreddit.glitch.me'));
 
 class MyApp extends StatelessWidget {
   @override
@@ -137,75 +139,95 @@ class HomeTab extends StatelessWidget {
       itemCount: 100,
       itemBuilder: (context, i) {
         return Card(
-          child: InkWell(
-            onTap: () => Navigator.of(context).pushNamed('/post'),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Row(
+          child: FutureBuilder(
+            future: dio.get('/posts', queryParameters: {'index': i}),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Container(
+                  height: 300,
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              }
+              // snapshot.data has a dio response object
+              Response response = snapshot.data;
+              Map<String, dynamic> data = response.data;
+
+              return InkWell(
+                onTap: () => Navigator.of(context).pushNamed('/post'),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    Icon(Icons.face),
-                    Expanded(
-                        child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text("r/something"),
-                    )),
-                    Icon(Icons.more_vert)
+                    Row(
+                      children: <Widget>[
+                        Icon(Icons.face),
+                        Expanded(
+                            child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text("r/${data['by']}"),
+                        )),
+                        Icon(Icons.more_vert)
+                      ],
+                    ),
+                    Text(data['description']),
+                    Container(
+                      height: 200,
+                      color: Colors.grey[100],
+                      child: Image.network(
+                        data['image'],
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Icon(
+                                Icons.arrow_downward,
+                                color: Colors.grey,
+                              ),
+                              Text("Vote"),
+                              Icon(
+                                Icons.arrow_upward,
+                                color: Colors.grey,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Icon(
+                                Icons.message,
+                                color: Colors.grey,
+                              ),
+                              SizedBox(width: 8),
+                              Text(data['comments'].toString()),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Icon(
+                                Icons.reply,
+                                color: Colors.grey,
+                              ),
+                              Text("Share"),
+                            ],
+                          ),
+                        ),
+                      ],
+                    )
                   ],
                 ),
-                Text("Some text will be written here blah blah blah......"),
-                Container(
-                  height: 200,
-                  color: Colors.grey[100],
-                ),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(
-                            Icons.arrow_downward,
-                            color: Colors.grey,
-                          ),
-                          Text("Vote"),
-                          Icon(
-                            Icons.arrow_upward,
-                            color: Colors.grey,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(
-                            Icons.message,
-                            color: Colors.grey,
-                          ),
-                          SizedBox(width: 8),
-                          Text("2"),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(
-                            Icons.reply,
-                            color: Colors.grey,
-                          ),
-                          Text("Share"),
-                        ],
-                      ),
-                    ),
-                  ],
-                )
-              ],
-            ),
+              );
+            },
           ),
         );
       },
@@ -243,8 +265,14 @@ class _PostScreenState extends State<PostScreen> {
             },
           ),
           actions: <Widget>[
-            Icon(Icons.bookmark),
-            Icon(Icons.more_vert),
+            IconButton(
+              icon: Icon(Icons.bookmark),
+              onPressed: () {},
+            ),
+            IconButton(
+              icon: Icon(Icons.more_vert),
+              onPressed: () {},
+            ),
           ],
         ),
         body: Center(
