@@ -16,7 +16,12 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         primaryColor: Colors.white,
       ),
-      home: HomeScreen(),
+      // home: HomeScreen(),
+      initialRoute: "/",
+      routes: {
+        '/': (context) => HomeScreen(),
+        '/post': (context) => PostScreen()
+      },
     );
   }
 }
@@ -87,7 +92,7 @@ class HomeScreen extends StatelessWidget {
         ),
         body: TabBarView(
           children: <Widget>[
-            HomeView(),
+            HomeTab(),
             Center(
               child: Text("Popular"),
             ),
@@ -121,8 +126,8 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class HomeView extends StatelessWidget {
-  const HomeView({
+class HomeTab extends StatelessWidget {
+  const HomeTab({
     Key key,
   }) : super(key: key);
 
@@ -131,75 +136,123 @@ class HomeView extends StatelessWidget {
     return ListView.builder(
       itemCount: 100,
       itemBuilder: (context, i) {
-        return Card(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Icon(Icons.face),
-                  Expanded(
-                      child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("r/something"),
-                  )),
-                  Icon(Icons.more_vert)
-                ],
-              ),
-              Text("Some text will be written here blah blah blah......"),
-              Container(
-                height: 200,
-                color: Colors.grey[100],
-              ),
-              Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(
-                          Icons.arrow_downward,
-                          color: Colors.grey,
-                        ),
-                        Text("Vote"),
-                        Icon(
-                          Icons.arrow_upward,
-                          color: Colors.grey,
-                        ),
-                      ],
+        return InkWell(
+          onTap: () => Navigator.of(context).pushNamed('/post'),
+          child: Card(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Icon(Icons.face),
+                    Expanded(
+                        child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text("r/something"),
+                    )),
+                    Icon(Icons.more_vert)
+                  ],
+                ),
+                Text("Some text will be written here blah blah blah......"),
+                Container(
+                  height: 200,
+                  color: Colors.grey[100],
+                ),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(
+                            Icons.arrow_downward,
+                            color: Colors.grey,
+                          ),
+                          Text("Vote"),
+                          Icon(
+                            Icons.arrow_upward,
+                            color: Colors.grey,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(
-                          Icons.message,
-                          color: Colors.grey,
-                        ),
-                        Text("2"),
-                      ],
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(
+                            Icons.message,
+                            color: Colors.grey,
+                          ),
+                          SizedBox(width: 8),
+                          Text("2"),
+                        ],
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(
-                          Icons.reply,
-                          color: Colors.grey,
-                        ),
-                        Text("Share"),
-                      ],
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(
+                            Icons.reply,
+                            color: Colors.grey,
+                          ),
+                          Text("Share"),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              )
-            ],
+                  ],
+                )
+              ],
+            ),
           ),
         );
       },
+    );
+  }
+}
+
+class PostScreen extends StatefulWidget {
+  @override
+  _PostScreenState createState() => _PostScreenState();
+}
+
+class _PostScreenState extends State<PostScreen> {
+  bool loading = true;
+  @override
+  void initState() {
+    Future.delayed(Duration(seconds: 2)).then((_) {
+      setState(() {
+        loading = false;
+      });
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Theme(
+      data: ThemeData(primarySwatch: Colors.blue),
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.close),
+            onPressed: () {
+              return Navigator.of(context).pop();
+            },
+          ),
+          actions: <Widget>[
+            Icon(Icons.bookmark),
+            Icon(Icons.more_vert),
+          ],
+        ),
+        body: Center(
+          child: loading
+              ? CircularProgressIndicator()
+              : Text("Pretend this is a Post"),
+        ),
+      ),
     );
   }
 }
