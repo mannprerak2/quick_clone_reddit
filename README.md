@@ -1,16 +1,9 @@
-# example_app
+# quick_reddit_clone
 
-A new Flutter project.
+A reddit like UI clone made with Flutter
 
-## Getting Started
+See this app Live [here](https://mannprerak2.github.io/quick_clone_reddit/) (made with Flutter Web)
 
-This project is a starting point for a Flutter application.
+View and Edit UI code in [dartpad](https://dartpad.dartlang.org/embed-flutter.html?id=13e3c3a7ab6eef5e40e7ecbdeabe9803&theme=dark)
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+###### Get Started with Flutter = https://flutter.dev/docs/get-started/ 

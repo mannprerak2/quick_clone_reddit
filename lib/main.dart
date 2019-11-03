@@ -101,6 +101,56 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
+          currentIndex: 0,
+          onTap: (index) {
+            if (index == 2) {
+              showModalBottomSheet(
+                context: context,
+                builder: (context) {
+                  return Theme(
+                    data: ThemeData.dark(),
+                    child: DefaultTextStyle(
+                      style: TextStyle(color: Colors.white),
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(color: Colors.blue
+                            // border: RoundedRectangleBorder()
+                            ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Text("Post to Reddit"),
+                            Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: List.generate(4, (i) {
+                                  return Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      IconButton(
+                                        icon: Icon(
+                                          Icons.device_unknown,
+                                        ),
+                                        onPressed: () {},
+                                      ),
+                                      Text("????")
+                                    ],
+                                  );
+                                })),
+                            CloseButton() // inbuilt
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              );
+            }
+          },
           type: BottomNavigationBarType.fixed,
           showSelectedLabels: false,
           showUnselectedLabels: false,
@@ -179,50 +229,53 @@ class HomeTab extends StatelessWidget {
                         fit: BoxFit.cover,
                       ),
                     ),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Icon(
-                                Icons.arrow_downward,
-                                color: Colors.grey,
-                              ),
-                              Text("Vote"),
-                              Icon(
-                                Icons.arrow_upward,
-                                color: Colors.grey,
-                              ),
-                            ],
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Icon(
+                                  Icons.arrow_downward,
+                                  color: Colors.grey,
+                                ),
+                                Text("Vote"),
+                                Icon(
+                                  Icons.arrow_upward,
+                                  color: Colors.grey,
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Icon(
-                                Icons.message,
-                                color: Colors.grey,
-                              ),
-                              SizedBox(width: 8),
-                              Text(data['comments'].toString()),
-                            ],
+                          Expanded(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Icon(
+                                  Icons.message,
+                                  color: Colors.grey,
+                                ),
+                                SizedBox(width: 8),
+                                Text(data['comments'].toString()),
+                              ],
+                            ),
                           ),
-                        ),
-                        Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Icon(
-                                Icons.reply,
-                                color: Colors.grey,
-                              ),
-                              Text("Share"),
-                            ],
+                          Expanded(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Icon(
+                                  Icons.reply,
+                                  color: Colors.grey,
+                                ),
+                                Text("Share"),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     )
                   ],
                 ),
@@ -245,9 +298,10 @@ class _PostScreenState extends State<PostScreen> {
   @override
   void initState() {
     Future.delayed(Duration(seconds: 2)).then((_) {
-      setState(() {
-        loading = false;
-      });
+      if (mounted)
+        setState(() {
+          loading = false;
+        });
     });
     super.initState();
   }
